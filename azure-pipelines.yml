@@ -27,19 +27,18 @@ resources:
   - repository: das-platform-building-blocks
     type: github
     name: SkillsFundingAgency/das-platform-building-blocks
-    ref: refs/tags/3.0.10
+    ref: refs/heads/dasd-15639
     endpoint: SkillsFundingAgency
   - repository: das-platform-automation
     type: github
     name: SkillsFundingAgency/das-platform-automation
-    ref: refs/tags/5.1.17
+    ref: refs/tags/5.1.24
     endpoint: SkillsFundingAgency
   pipelines:
   - pipeline: das-employer-config
     project: Digital Apprenticeship Service
     source: das-employer-config
     branch: master
-
 
 stages:
 - stage: Build
@@ -52,8 +51,6 @@ stages:
     parameters:
       SolutionBaseName: $(SolutionBaseName)
       DatabaseProjectPath: src/$(SolutionBaseName).Database/$(SolutionBaseName).Database.csproj
-      
-- template: azure-pipelines-templates/deploy/stage/nuget-publish.yml@das-platform-building-blocks
 
 - stage: Deploy_AT
   dependsOn: Build
@@ -86,6 +83,10 @@ stages:
       SolutionBaseName: $(SolutionBaseName)
       AppRoleAssignmentsServiceConnection: das-app-role-assignments-CDS
       OverrideBlockOnPossibleDataLoss: ${{ parameters.OverrideBlockOnPossibleDataLoss  }}
+
+- template: azure-pipelines-templates/deploy/stage/nuget-publish.yml@das-platform-building-blocks
+  parameters:
+    dependsOn: Deploy_AT
 
 - stage: Deploy_TEST2
   dependsOn: Build
