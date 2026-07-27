@@ -68,9 +68,16 @@ stages:
       AppRoleAssignmentsServiceConnection: das-app-role-assignments-CDS
       OverrideBlockOnPossibleDataLoss: ${{ parameters.OverrideBlockOnPossibleDataLoss }}
 
+- stage: Build2
+  jobs:
+  - template: pipeline-templates/job/code-build.yml
+    parameters:
+      SolutionBaseName: SFA.DAS.Recruit.Contracts
+      BuildConfiguration: $(BuildConfiguration)
+
 - template: azure-pipelines-templates/deploy/stage/nuget-publish.yml@das-platform-building-blocks
   parameters:
-    dependsOn: Deploy_AT
+    dependsOn: Build2
 
 - stage: Deploy_TEST
   dependsOn: Build
