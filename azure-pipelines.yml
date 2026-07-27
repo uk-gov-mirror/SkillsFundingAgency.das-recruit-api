@@ -42,6 +42,7 @@ resources:
 
 stages:
 - stage: Build
+  displayName: Build Recruit.Api
   jobs:
   - template: pipeline-templates/job/code-build.yml
     parameters:
@@ -69,6 +70,7 @@ stages:
       OverrideBlockOnPossibleDataLoss: ${{ parameters.OverrideBlockOnPossibleDataLoss }}
 
 - stage: Build2
+  displayName: Build SFA.DAS.Recruit.Contracts
   jobs:
   - template: pipeline-templates/job/code-build.yml
     parameters:
