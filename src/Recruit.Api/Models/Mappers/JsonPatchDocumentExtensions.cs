@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
 using Microsoft.AspNetCore.JsonPatch.SystemTextJson.Exceptions;
 using Microsoft.AspNetCore.JsonPatch.SystemTextJson.Operations;
@@ -10,6 +11,7 @@ internal static class JsonPatchDocumentExtensions
     public static JsonPatchDocument<TEntity> ToDomain<TEntity>(this JsonPatchDocument source) where TEntity : class
     {
         var result = new JsonPatchDocument<TEntity>();
+        result.SerializerOptions = new JsonSerializerOptions(source.SerializerOptions) { PropertyNameCaseInsensitive = true };
         var operations = source.Operations.Select(x => new Operation<TEntity>
         {
             from = x.from,
@@ -17,14 +19,15 @@ internal static class JsonPatchDocumentExtensions
             value = x.value,
             path = x?.path
         });
-            
+
         result.Operations.AddRange(operations);
         return result;
     }
-    
+
     public static JsonPatchDocument<TEntity> ToDomain<TSource, TEntity>(this JsonPatchDocument<TSource> source) where TEntity : class where TSource : class
     {
         var result = new JsonPatchDocument<TEntity>();
+        result.SerializerOptions = new JsonSerializerOptions(source.SerializerOptions) { PropertyNameCaseInsensitive = true };
         var operations = source.Operations.Select(x => new Operation<TEntity>
         {
             from = x.from,
@@ -32,26 +35,27 @@ internal static class JsonPatchDocumentExtensions
             value = x.value,
             path = x?.path
         });
-            
+
         result.Operations.AddRange(operations);
         return result;
     }
-    
+
     public static JsonPatchDocument<TEntity> ToDomain<TSource, TEntity>(this JsonPatchDocument<TSource> source, object id, Dictionary<string, Func<object, Operation<TSource>, Operation<TEntity>>> fieldMappings) where TEntity : class where TSource : class
     {
         var pathRegex = new Regex(@"^\/(?<property>[a-zA-Z]*)[\/-]?", RegexOptions.IgnoreCase | RegexOptions.Compiled, TimeSpan.FromSeconds(2));
         var pathReplaceRegex = new Regex(@"([\w]+)", RegexOptions.IgnoreCase | RegexOptions.Compiled, TimeSpan.FromSeconds(2));
         var result = new JsonPatchDocument<TEntity>();
+        result.SerializerOptions = new JsonSerializerOptions(source.SerializerOptions) { PropertyNameCaseInsensitive = true };
         var operations = source.Operations.Select(x =>
         {
             var match = pathRegex.Match(x.path);
-            string queryField = match.Success ? match.Groups["property"].Value : x.path; 
+            string queryField = match.Success ? match.Groups["property"].Value : x.path;
 
             if (fieldMappings.TryGetValue(queryField, out Func<object, Operation<TSource>, Operation<TEntity>>? mapping))
             {
                 var mappedOperation = mapping(id, x);
                 mappedOperation.path = pathReplaceRegex.Replace(x.path, mappedOperation.path);
-                return mappedOperation;    
+                return mappedOperation;
             }
 
             return new Operation<TEntity> {
