@@ -72,10 +72,11 @@ stages:
 - stage: Build2
   displayName: Build SFA.DAS.Recruit.Contracts
   jobs:
-  - template: pipeline-templates/job/code-build.yml
+  - template: pipeline-templates/job/second-build.yml
     parameters:
       SolutionBaseName: SFA.DAS.Recruit.Contracts
       BuildConfiguration: $(BuildConfiguration)
+      TargetProjects: src/SFA.DAS.Recruit.Contracts/SFA.DAS.Recruit.Contracts.csproj
 
 - template: azure-pipelines-templates/deploy/stage/nuget-publish.yml@das-platform-building-blocks
   parameters:
