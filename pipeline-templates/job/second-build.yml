@@ -12,6 +12,8 @@ jobs:
   variables:
   - group: BUILD Management Resources
   steps:
+  - template: azure-pipelines-templates/build/step/gitversion.yml@das-platform-building-blocks
+  
   - task: DotNetCoreCLI@2
     displayName: Restore
     inputs:
