@@ -121,19 +121,7 @@ internal static class ApplicationReviewExtensions
     }
 
     public static JsonPatchDocument<ApplicationReviewEntity> ToEntity(this JsonPatchDocument<ApplicationReview> source)
-    {
-        var result = new JsonPatchDocument<ApplicationReviewEntity>();
-        var operations = source.Operations.Select(x => new Operation<ApplicationReviewEntity>
-        {
-            from = x.from,
-            op = x.op,
-            value = x.value,
-            path = x?.path
-        });
-            
-        result.Operations.AddRange(operations);
-        return result;
-    }
+        => source.ToDomain<ApplicationReview, ApplicationReviewEntity>();
 
     public static List<GetApplicationReviewResponse> ToGetResponse(this List<ApplicationReviewEntity> entities)
     {

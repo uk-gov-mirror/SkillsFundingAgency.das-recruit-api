@@ -17,6 +17,10 @@ internal class WhenMappingPatchRequest
         var result = source.ToEntity();
 
         // assert
-        result.Should().BeEquivalentTo(source);
+        result.Operations.Should().HaveCount(1);
+        result.Operations[0].op.Should().Be(source.Operations[0].op);
+        result.Operations[0].path.Should().Be(source.Operations[0].path);
+        result.Operations[0].value.Should().Be(source.Operations[0].value);
+        result.Operations[0].from.Should().Be(source.Operations[0].from);
     }
 }
