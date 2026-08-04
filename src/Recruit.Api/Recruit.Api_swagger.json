@@ -919,6 +919,65 @@
         }
       }
     },
+    "/api/applicationreviews/requiring-feedback/by-vacancies": {
+      "get": {
+        "tags": [
+          "ApplicationReview"
+        ],
+        "parameters": [
+          {
+            "name": "vacancyReferences",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "pattern": "^-?(?:0|[1-9]\\d*)$",
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "required": true,
+            "example": "1.0"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VacancyApplicationsCountRequiringFeedback"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VacancyApplicationsCountRequiringFeedback"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VacancyApplicationsCountRequiringFeedback"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/employer/profiles/{accountLegalEntityId}/addresses": {
       "get": {
         "tags": [
@@ -10341,6 +10400,26 @@
             "items": {
               "$ref": "#/components/schemas/VacancyAnalytics"
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "VacancyApplicationsCountRequiringFeedback": {
+        "required": [
+          "vacancyReference",
+          "applicationsRequiringFeedbackCount"
+        ],
+        "type": "object",
+        "properties": {
+          "vacancyReference": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": "integer",
+            "format": "int64"
+          },
+          "applicationsRequiringFeedbackCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

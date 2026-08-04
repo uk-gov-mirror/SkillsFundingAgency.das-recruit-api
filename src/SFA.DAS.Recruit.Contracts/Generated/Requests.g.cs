@@ -88,6 +88,13 @@ public record GetApplicationreviewsByVacancyReferenceTempStatusByStatusApiReques
     public string GetUrl => $"api/applicationreviews/{VacancyReference}/temp-status/{Status}";
 }
 
+/// <summary>GET /api/applicationreviews/requiring-feedback/by-vacancies &#x2192; List&lt;<see cref="VacancyApplicationsCountRequiringFeedback"/>&gt;</summary>
+public record GetApplicationreviewsRequiringFeedbackByVacanciesApiRequest(List<long>? VacancyReferences) : IGetApiRequest
+{
+    public string GetUrl => QueryHelpers.AddQueryString($"api/applicationreviews/requiring-feedback/by-vacancies",
+        (VacancyReferences ?? []).Select(v => new KeyValuePair<string, string?>("vacancyReferences", v.ToString())));
+}
+
 /// <summary>GET /api/employer/profiles/{accountLegalEntityId}/addresses &#x2192; List&lt;<see cref="EmployerProfileAddress"/>&gt;</summary>
 public record GetEmployerProfilesByAccountLegalEntityIdAddressesApiRequest(long AccountLegalEntityId) : IGetApiRequest
 {
