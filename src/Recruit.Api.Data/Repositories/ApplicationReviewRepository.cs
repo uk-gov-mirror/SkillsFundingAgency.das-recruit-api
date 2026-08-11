@@ -62,7 +62,7 @@ public interface IApplicationReviewRepository
     Task<List<ApplicationReviewEntity>> GetAllByVacancyReferenceAndTempStatus(long vacancyReference, ApplicationReviewStatus status,
         CancellationToken token = default);
 
-    Task<List<KeyValuePair<long, int>>> GetVacancyApplicationsCountRequiringFeedback(List<long> vacancyReferences, CancellationToken token = default);
+    Task<Dictionary<long, int>> GetVacancyApplicationsCountRequiringFeedback(List<long> vacancyReferences, CancellationToken token = default);
 }
 
 internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContext) : IApplicationReviewRepository
@@ -227,16 +227,18 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
             .ToListAsync(token);
     }
 
-    public async Task<List<KeyValuePair<long, int>>> GetVacancyApplicationsCountRequiringFeedback(List<long> vacancyReferences, CancellationToken token = default)
+    public async Task<Dictionary<long, int>> GetVacancyApplicationsCountRequiringFeedback(List<long> vacancyReferences, CancellationToken token = default)
     {
-        var results = await recruitDataContext.ApplicationReviewEntities
+        return await recruitDataContext.ApplicationReviewEntities
             .AsNoTracking()
-            .Where(x => vacancyReferences.Contains(x.VacancyReference) && string.IsNullOrWhiteSpace(x.CandidateFeedback))
+            .Where(x => 
+                vacancyReferences.Contains(x.VacancyReference)
+                && x.WithdrawnDate == null
+                && x.Status != ApplicationReviewStatus.Successful
+                && x.Status != ApplicationReviewStatus.Unsuccessful)
             .GroupBy(x => x.VacancyReference)
             .Select(x => new KeyValuePair<long, int>(x.Key, x.Count()))
-            .ToListAsync(token);
-
-        return results;
+            .ToDictionaryAsync(x => x.Key, x => x.Value, token);
     }
 
     public async Task<List<ApplicationReviewEntity>> GetNewSharedByAccountId(long accountId,List<long> vacancyReferences,

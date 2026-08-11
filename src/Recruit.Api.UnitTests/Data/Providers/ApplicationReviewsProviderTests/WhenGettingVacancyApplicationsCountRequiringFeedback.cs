@@ -8,7 +8,7 @@ internal class WhenGettingVacancyApplicationsCountRequiringFeedback
     [Test, MoqAutoData]
     public async Task Then_The_Repository_Is_Called_And_The_Results_Returned(
         List<long> vacancyIds,
-        List<KeyValuePair<long, int>> results,
+        Dictionary<long, int> results,
         [Frozen] Mock<IApplicationReviewRepository> repository,
         [Greedy] ApplicationReviewsProvider sut, 
         CancellationToken cancellationToken)

@@ -13,7 +13,7 @@ public class WhenGettingVacancyApplicationsCountRequiringFeedback
     [Test, MoqAutoData]
     public async Task Then_The_Results_Are_Mapped_Correctly(
         List<long> vacancyIds,
-        List<KeyValuePair<long, int>> results,
+        Dictionary<long, int> results,
         [Frozen] Mock<IApplicationReviewsProvider> provider,
         [Greedy] ApplicationReviewController sut,
         CancellationToken token)
