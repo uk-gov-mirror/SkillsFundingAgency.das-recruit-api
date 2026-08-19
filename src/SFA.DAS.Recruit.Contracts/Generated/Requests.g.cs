@@ -209,6 +209,13 @@ public class PostVacanciesByIdCreateNotificationsByStatusApiRequest : IPostApiRe
     public object Data { get; set; } = default!;
 }
 
+/// <summary>POST /api/vacancies/requiring-feedback/create-notifications &#x2192; List&lt;<see cref="NotificationEmail"/>&gt;</summary>
+public class PostVacanciesRequiringFeedbackCreateNotificationsApiRequest : IPostApiRequest, IPostApiRequest<object>
+{
+    public string PostUrl => $"api/vacancies/requiring-feedback/create-notifications";
+    public object Data { get; set; } = default!;
+}
+
 /// <summary>GET /api/prohibitedcontent/{contentType} &#x2192; List&lt;string&gt;</summary>
 public record GetProhibitedcontentByContentTypeApiRequest(ProhibitedContentType ContentType) : IGetApiRequest
 {
