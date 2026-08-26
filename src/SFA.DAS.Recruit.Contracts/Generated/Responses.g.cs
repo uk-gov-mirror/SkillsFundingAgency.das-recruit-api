@@ -3586,6 +3586,10 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         [Newtonsoft.Json.JsonProperty("applicationSubmittedCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int ApplicationSubmittedCount { get; set; } = default!;
 
+        [System.Text.Json.Serialization.JsonPropertyName("savedCount")]
+        [Newtonsoft.Json.JsonProperty("savedCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int SavedCount { get; set; } = default!;
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
